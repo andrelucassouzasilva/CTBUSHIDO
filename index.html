@@ -3,13 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="Protótipo de site do C.T. Bushido com agendamento de aulas de Boxe, Jiu-Jitsu e Karatê-do.">
+<meta name="description" content="Protótipo de site do Coach Rael com agendamento de personal e aulas de Boxe, Muay Thai e preparação de goleiro.">
 <meta name="theme-color" content="#B81F2A">
-<title>C.T. Bushido</title>
+<title>Coach Rael</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Big+Shoulders+Display:wght@700;800;900&family=IBM+Plex+Mono:wght@500;600&display=swap">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@900&text=%E6%AD%A6%E5%A3%AB%E9%81%93%E6%8B%B3%E6%9F%94%E8%A1%93%E7%A9%BA%E6%89%8B&display=swap">
 <style>
 /* reset básico */
 html,body{margin:0}
@@ -277,7 +276,8 @@ footer{padding-block:28px 100px;color:var(--muted);font-size:.85rem}
   *{transition:none!important;animation:none!important}
   html{scroll-behavior:auto}
 }
-/* C.T. Bushido */
+/* Coach Rael */
+.record b{font-size:1.15rem}
 .brand-mark{border-radius:50%;background:var(--red)}
 .hero-tag{display:flex;gap:14px;align-items:center}
 .hero-tag .eyebrow{line-height:1.7}
@@ -289,22 +289,22 @@ footer{padding-block:28px 100px;color:var(--muted);font-size:.85rem}
 .mods{display:grid;gap:10px}
 .modcard{display:grid;grid-template-columns:64px minmax(0,1fr) auto;gap:2px 16px;align-items:center;padding:16px 18px;background:var(--surface);border:2px solid var(--line);border-radius:8px;text-align:left;transition:border-color .12s,transform .12s}
 .modcard:hover{border-color:var(--ink);transform:translateX(2px)}
-.modcard .k{grid-row:1/3;font-family:var(--f-jp);font-weight:900;font-size:1.7rem;color:var(--red);text-align:center;line-height:1}
+.modcard .k{grid-row:1/3;font-family:var(--f-mono);font-weight:600;font-size:.82rem;letter-spacing:.06em;color:var(--red);border:2px solid var(--red);border-radius:4px;padding:8px 0;text-align:center;line-height:1}
 .modcard b{font-family:var(--f-display);font-size:1.6rem;text-transform:uppercase;line-height:1}
 .modcard span{grid-column:2;color:var(--muted);font-size:.9rem}
 .modcard .go{grid-column:3;grid-row:1/3;color:var(--red);font-weight:700;font-size:.9rem;white-space:nowrap}
 @media (max-width:920px){ .dojo{grid-template-columns:minmax(0,1fr)} }
-@media (max-width:520px){ .modcard{grid-template-columns:48px minmax(0,1fr)} .modcard .go{grid-column:2;grid-row:auto} .modcard .k{font-size:1.3rem} }
+@media (max-width:520px){ .modcard{grid-template-columns:48px minmax(0,1fr)} .modcard .go{grid-column:2;grid-row:auto} }
 </style>
 
 </head>
 <body>
-<div class="proto">PROTÓTIPO DE PROPOSTA PARA O C.T. BUSHIDO · horários e preços ilustrativos</div>
+<div class="proto">PROTÓTIPO DE PROPOSTA PARA O COACH RAEL · horários e preços ilustrativos</div>
 <header class="top">
   <div class="wrap top-in">
-    <a class="brand" href="#inicio"><span class="brand-mark" aria-hidden="true"></span>C.T.<b>Bushido</b></a>
+    <a class="brand" href="#inicio"><span class="brand-mark" aria-hidden="true"></span>Coach<b>Rael</b></a>
     <nav class="nav" aria-label="Seções">
-      <a href="#meus">Meus treinos</a><a href="#horarios">Horários</a><a href="#planos">Planos</a><a href="#ct">O C.T.</a><a href="#duvidas">Dúvidas</a>
+      <a href="#meus">Meus treinos</a><a href="#horarios">Horários</a><a href="#planos">Planos</a><a href="#sobre">Sobre</a><a href="#duvidas">Dúvidas</a>
     </nav>
     <a class="btn btn-red btn-sm" href="#agendar">Agendar treino</a>
   </div>
@@ -314,21 +314,18 @@ footer{padding-block:28px 100px;color:var(--muted);font-size:.85rem}
 <main>
   <section class="hero wrap" id="inicio">
     <div class="hero-copy">
-      <div class="hero-tag">
-        <span class="hanko" lang="ja" aria-hidden="true">武士道</span>
-        <p class="eyebrow">O caminho do guerreiro<br>Boxe · Jiu-Jitsu · Karatê-do</p>
-      </div>
-      <h1>Seu treino marcado em <em>três passos.</em></h1>
-      <p class="lede">Escolha a modalidade, pegue um horário e confirme. A vaga fica garantida na hora, sem esperar resposta no WhatsApp.</p>
+      <p class="eyebrow">Israel Viturino · Personal e coach de luta</p>
+      <h1>Treino com o Coach Rael em <em>três passos.</em></h1>
+      <p class="lede">Escolha a modalidade, pegue um horário e confirme. A vaga fica garantida na hora, sem esperar resposta no direct ou no WhatsApp.</p>
       <ul class="hero-why">
-        <li>Vagas em tempo real por turma, com aviso de últimos lugares</li>
+        <li>Horários de personal e de turma no mesmo lugar, com vagas em tempo real</li>
         <li>Turma lotada? Entre na lista de espera com um toque</li>
         <li>Na segunda vez, seus dados já vêm preenchidos e dá para repetir o último treino</li>
       </ul>
-      <ul class="facts" aria-label="O C.T. em números">
+      <ul class="facts" aria-label="Formato do treino">
+        <li><b>1 a 1</b><span>no personal</span></li>
         <li><b>3</b><span>modalidades</span></li>
-        <li><b>12</b><span>alunos por turma, no máximo</span></li>
-        <li><b>1</b><span>toque para repetir o treino</span></li>
+        <li><b>3:00</b><span>por round no boxe</span></li>
       </ul>
     </div>
 
@@ -343,7 +340,7 @@ footer{padding-block:28px 100px;color:var(--muted);font-size:.85rem}
   <section class="section band" id="meus">
     <div class="wrap">
       <div class="sec-head">
-        <div><p class="eyebrow">Neste aparelho</p><h2>Meus treinos</h2><p>Remarque ou cancele sem precisar falar com ninguém. Cancelamento grátis até 2 horas antes.</p></div>
+        <div><p class="eyebrow">Neste aparelho</p><h2>Meus treinos</h2><p>Remarque ou cancele sem precisar mandar mensagem. Cancelamento grátis até 2 horas antes.</p></div>
       </div>
       <div class="mine" id="mine"></div>
     </div>
@@ -352,7 +349,7 @@ footer{padding-block:28px 100px;color:var(--muted);font-size:.85rem}
   <section class="section" id="horarios">
     <div class="wrap">
       <div class="sec-head">
-        <div><p class="eyebrow">Aulas em turma</p><h2>Grade da semana</h2><p>Toque em um horário para ir direto à confirmação.</p></div>
+        <div><p class="eyebrow">Aulas em turma</p><h2>Grade da semana</h2><p>Toque em um horário para ir direto à confirmação. Os horários de personal aparecem no agendamento.</p></div>
         <div class="grade-tools"><div class="seg" id="grade-seg"></div></div>
       </div>
       <div class="grade-wrap"><table class="grade" id="grade"></table></div>
@@ -361,61 +358,67 @@ footer{padding-block:28px 100px;color:var(--muted);font-size:.85rem}
 
   <section class="section band" id="planos">
     <div class="wrap">
-      <div class="sec-head"><div><p class="eyebrow">Valores ilustrativos</p><h2>Planos</h2><p>A primeira aula é por conta do C.T., em qualquer modalidade.</p></div></div>
+      <div class="sec-head"><div><p class="eyebrow">Valores ilustrativos</p><h2>Planos</h2><p>A primeira aula é por conta do Coach, em qualquer modalidade.</p></div></div>
       <div class="plans">
         <article class="plan">
-          <h3>2x por semana</h3>
+          <h3>Turma</h3>
           <div class="val">R$ 180<small> /mês</small></div>
-          <ul><li>8 aulas por mês</li><li>Uma modalidade</li><li>Reposição de falta no mesmo mês</li></ul>
+          <ul><li>Aulas em grupo, 2x por semana</li><li>Boxe, Muay Thai ou goleiro</li><li>Reposição de falta no mesmo mês</li></ul>
           <button class="btn" data-plan="grupo">Marcar aula em turma</button>
         </article>
         <article class="plan hot">
           <span class="tag">Mais escolhido</span>
-          <h3>Livre</h3>
-          <div class="val">R$ 250<small> /mês</small></div>
-          <ul><li>Aulas sem limite</li><li>Boxe, Jiu-Jitsu e Karatê-do</li><li>Prioridade na lista de espera</li></ul>
+          <h3>Personal 2x</h3>
+          <div class="val">R$ 800<small> /mês</small></div>
+          <ul><li>8 treinos 1 a 1 por mês</li><li>Plano de treino para o seu objetivo</li><li>Prioridade para remarcar</li></ul>
           <button class="btn btn-red" data-plan="experimental">Começar com aula grátis</button>
         </article>
         <article class="plan">
-          <h3>Particular</h3>
-          <div class="val">R$ 120<small> /aula</small></div>
-          <ul><li>60 min, 1 aluno</li><li>Correção técnica e preparação para competição</li><li>Pacote de 4 por R$ 440</li></ul>
-          <button class="btn" data-plan="particular">Ver horários particulares</button>
+          <h3>Personal avulso</h3>
+          <div class="val">R$ 120<small> /treino</small></div>
+          <ul><li>60 min, 1 aluno</li><li>Manopla, correção técnica, preparação para luta</li><li>Pacote de 4 por R$ 440</li></ul>
+          <button class="btn" data-plan="particular">Ver horários de personal</button>
         </article>
       </div>
     </div>
   </section>
 
-  <section class="section" id="ct">
+  <section class="section" id="sobre">
     <div class="wrap dojo">
       <div class="dojo-body">
-        <p class="eyebrow">O C.T.</p>
-        <h2>Técnica, foco, formação física e mental.</h2>
-        <p>Três artes no mesmo tatame. Iniciante aprende base e postura antes de qualquer combate. Quem compete recebe correção de detalhe a cada treino.</p>
-        <div class="addr"><span>Estrada Municipal do Aguassai, 1723</span><a class="link" href="https://www.instagram.com/c.t.bushido/" target="_blank" rel="noopener">@c.t.bushido</a></div>
+        <p class="eyebrow">Sobre o Coach</p>
+        <h2>Educação Física, ringue e campo.</h2>
+        <p>Israel Viturino, o Coach Rael, é formado em Educação Física. É diretor técnico do C.T. Bushido, faz parte do Muay Thai da Viturino Team e é professor na Escola PFC Cotia.</p>
+        <p>No personal, o treino segue o seu objetivo: aprender do zero, ganhar condicionamento, se preparar para lutar ou fechar o gol.</p>
+        <div class="record">
+          <div><b class="mono">Ed. Física</b><span>formação</span></div>
+          <div><b class="mono">C.T. Bushido</b><span>diretor técnico</span></div>
+          <div><b class="mono">PFC Cotia</b><span>professor</span></div>
+        </div>
+        <div class="addr"><a class="link" href="https://www.instagram.com/coach.rael/" target="_blank" rel="noopener">@coach.rael no Instagram</a></div>
       </div>
       <div class="mods">
-        <button class="modcard" data-modgo="boxe"><span class="k" lang="ja" aria-hidden="true">拳</span><b>Boxe</b><span>Guarda, deslocamento, combinações e condicionamento.</span><span class="go">Horários →</span></button>
-        <button class="modcard" data-modgo="jj"><span class="k" lang="ja" aria-hidden="true">柔術</span><b>Jiu-Jitsu</b><span>Quedas, passagens e finalizações, com e sem kimono.</span><span class="go">Horários →</span></button>
-        <button class="modcard" data-modgo="kara"><span class="k" lang="ja" aria-hidden="true">空手</span><b>Karatê-do</b><span>Kihon, kata e kumite, com graduação por faixa.</span><span class="go">Horários →</span></button>
+        <button class="modcard" data-modgo="boxe"><span class="k">BOX</span><b>Boxe</b><span>Guarda, deslocamento, combinações e condicionamento.</span><span class="go">Horários →</span></button>
+        <button class="modcard" data-modgo="muay"><span class="k">MT</span><b>Muay Thai</b><span>Socos, chutes, joelhadas e clinch.</span><span class="go">Horários →</span></button>
+        <button class="modcard" data-modgo="goleiro"><span class="k">GOL</span><b>Goleiro</b><span>Reflexo, posicionamento, saída do gol e queda.</span><span class="go">Horários →</span></button>
       </div>
     </div>
   </section>
 
   <section class="section band" id="duvidas">
     <div class="wrap">
-      <div class="sec-head"><div><p class="eyebrow">Antes da primeira aula</p><h2>Dúvidas</h2></div></div>
+      <div class="sec-head"><div><p class="eyebrow">Antes do primeiro treino</p><h2>Dúvidas</h2></div></div>
       <div class="faq">
-        <details open><summary>Nunca treinei. Posso começar?</summary><p>Pode. Marque a aula experimental: ela acontece dentro de uma turma normal, e o professor separa os exercícios por nível.</p></details>
-        <details><summary>Preciso de equipamento?</summary><p>Na primeira aula, não. No boxe emprestamos luva e bandagem. No jiu-jitsu e no karatê dá para fazer a primeira aula de roupa de treino.</p></details>
-        <details><summary>Posso fazer mais de uma modalidade?</summary><p>Pode. No plano Livre você marca boxe, jiu-jitsu e karatê-do na mesma semana, tudo pelo mesmo agendamento.</p></details>
-        <details><summary>E se eu não puder ir?</summary><p>Cancele em "Meus treinos" até 2 horas antes. A vaga volta para a turma e quem está na lista de espera é avisado.</p></details>
+        <details open><summary>Nunca treinei. Posso começar?</summary><p>Pode. Marque a aula experimental. O Coach avalia seu nível e monta o treino a partir dele.</p></details>
+        <details><summary>Qual a diferença entre personal e turma?</summary><p>No personal o treino é só seu, com correção o tempo todo. Na turma você treina em grupo de até 12 alunos, por um valor menor.</p></details>
+        <details><summary>Preciso de equipamento?</summary><p>No primeiro treino de boxe ou Muay Thai, não: luva e bandagem são emprestadas. Na preparação de goleiro, venha de chuteira ou tênis.</p></details>
+        <details><summary>E se eu não puder ir?</summary><p>Cancele em "Meus treinos" até 2 horas antes. O horário volta para a agenda e quem está na lista de espera é avisado.</p></details>
       </div>
     </div>
   </section>
 </main>
 
-<footer class="wrap">C.T. Bushido · Estrada Municipal do Aguassai, 1723 · protótipo de proposta de site com agendamento. Os agendamentos ficam salvos só neste navegador.</footer>
+<footer class="wrap">Coach Rael · Israel Viturino · protótipo de proposta de site com agendamento. Os agendamentos ficam salvos só neste navegador.</footer>
 
 <div class="mbar" id="mbar">
   <div><small>Próxima vaga</small><b id="mbar-next">—</b></div>
@@ -432,29 +435,29 @@ const store = {
 };
 
 const TYPES = {
-  grupo:        { label:'Aula em turma',    short:'Turma',        cap:12, price:'Plano ou avulsa', desc:'Técnica e condicionamento. Todos os níveis.' },
-  experimental: { label:'Aula experimental',short:'Experimental', cap:12, price:'Grátis',          desc:'Sua primeira aula, numa turma normal.' },
-  particular:   { label:'Aula particular',  short:'Particular',   cap:1,  price:'R$ 120',          desc:'60 min, 1 a 1, correção de detalhe.' }
+  particular:   { label:'Personal 1 a 1',   short:'Personal',     cap:1,  price:'R$ 120',          desc:'60 min só seus, com correção o tempo todo.' },
+  grupo:        { label:'Aula em turma',    short:'Turma',        cap:12, price:'Plano mensal',    desc:'Técnica e condicionamento em grupo.' },
+  experimental: { label:'Aula experimental',short:'Experimental', cap:12, price:'Grátis',          desc:'Primeiro treino, numa turma normal.' }
 };
 const MODS = {
-  boxe: { label:'Boxe',       note:'Luva e saco' },
-  jj:   { label:'Jiu-Jitsu',  note:'Com kimono' },
-  kara: { label:'Karatê-do',  note:'Kihon, kata, kumite' }
+  boxe:    { label:'Boxe',      note:'Personal e turma' },
+  muay:    { label:'Muay Thai', note:'Viturino Team' },
+  goleiro: { label:'Goleiro',   note:'Preparação' }
 };
 const GROUP_TIMES = {
-  boxe: { wk:['07:00','12:00','18:30','20:00'], sat:['10:00'] },
-  jj:   { wk:['06:30','19:00','20:30'],         sat:['09:00'] },
-  kara: { wk:['17:30','19:30'],                 sat:['11:00'] }
+  boxe:    { wk:['07:00','19:00','20:00'], sat:['10:00'] },
+  muay:    { wk:['18:00','20:30'],         sat:['09:00'] },
+  goleiro: { wk:['17:00'],                 sat:['08:00'] }
 };
 const PRIV_TIMES = {
-  boxe: { wk:['08:00','09:00','10:00','14:00','15:00','16:00'], sat:['08:00','09:00'] },
-  jj:   { wk:['09:00','11:00','15:00','17:00'], sat:[] },
-  kara: { wk:['14:00','16:00'], sat:['09:00'] }
+  boxe:    { wk:['06:00','08:00','09:00','14:00','15:00','16:00'], sat:['07:00','11:00'] },
+  muay:    { wk:['10:00','15:00'], sat:[] },
+  goleiro: { wk:['14:00','16:00'], sat:['09:00'] }
 };
 const GEAR = {
-  boxe: ['Venha de roupa de treino. Luva e bandagem a gente empresta.', 'Leve luva, bandagem e água.'],
-  jj:   ['Venha de roupa de treino. Na primeira aula não precisa de kimono.', 'Leve kimono limpo e água.'],
-  kara: ['Venha de roupa de treino. Na primeira aula não precisa de karategi.', 'Leve karategi, faixa e água.']
+  boxe:    ['Venha de roupa de treino. Luva e bandagem são emprestadas.', 'Leve luva, bandagem e água.'],
+  muay:    ['Venha de roupa de treino. Luva e bandagem são emprestadas.', 'Leve luva, bandagem, caneleira e água.'],
+  goleiro: ['Venha de chuteira ou tênis e roupa de treino.', 'Leve luvas de goleiro, chuteira e água.']
 };
 const LEVELS = ['Nunca treinei','Iniciante','Intermediário','Avançado'];
 
@@ -477,8 +480,8 @@ function dayShort(k){
 function dayLong(k){ const d = fromKey(k); return `${DOW_LONG[d.getDay()]}, ${d.getDate()} ${MON[d.getMonth()]}`; }
 function hash(s){ let h = 2166136261; for (const c of s){ h ^= c.charCodeAt(0); h = Math.imul(h, 16777619); } return h >>> 0; }
 
-let bookings = store.get('bushido.bookings', []);
-let profile  = store.get('bushido.profile', null);
+let bookings = store.get('rael.bookings', []);
+let profile  = store.get('rael.profile', null);
 const st = { round:1, type:null, mod:(profile && MODS[profile.mod] && profile.mod) || 'boxe', date:null, time:null, wait:false, done:null, resched:null, editProfile:false, level:null };
 let gradeMod = st.mod;
 const pendingCancel = new Set();
@@ -536,7 +539,7 @@ function fmtPhone(v){
   if (d.length <= 10) return `(${d.slice(0,2)}) ${d.slice(2,6)}-${d.slice(6)}`;
   return `(${d.slice(0,2)}) ${d.slice(2,7)}-${d.slice(7)}`;
 }
-function save(){ store.set('bushido.bookings', bookings); }
+function save(){ store.set('rael.bookings', bookings); }
 
 /* ---------- views ---------- */
 function quickBtn(title, line, d){
@@ -615,7 +618,7 @@ function viewR3(){
       <div class="field"><label for="bk-name">Nome</label><input id="bk-name" name="name" autocomplete="name" value="${esc(p.name || '')}" placeholder="Como o professor te chama"><p class="err" id="err-name"></p></div>
       <div class="field"><label for="bk-phone">WhatsApp</label><input id="bk-phone" name="phone" inputmode="tel" autocomplete="tel" value="${esc(p.phone || '')}" placeholder="(11) 90000-0000"><p class="err" id="err-phone"></p></div>`
     : `<div class="me"><span>Confirmando como <b>${esc(p.name)}</b> · <span class="mono">${esc(p.phone)}</span></span><button type="button" class="link" data-act="edit-profile">Não é você?</button></div>`}
-    ${needLevel ? `<div><p class="lbl">Experiência em ${MODS[st.mod].label}</p><div class="chips" role="group" aria-label="Experiência">${LEVELS.map(l =>
+    ${needLevel ? `<div><p class="lbl">Experiência</p><div class="chips" role="group" aria-label="Experiência">${LEVELS.map(l =>
       `<button type="button" class="chip" data-act="level" data-v="${l}" aria-pressed="${(st.level || p.level) === l}">${l}</button>`).join('')}</div></div>` : ''}
     ${showForm ? `<label class="check"><input type="checkbox" id="bk-remember" checked> Lembrar meus dados neste aparelho</label>` : ''}
     <button class="btn ${st.wait ? 'btn-ink' : 'btn-red'} btn-block" type="submit">${st.resched ? 'Confirmar remarcação' : st.wait ? 'Entrar na lista de espera' : 'Confirmar treino'}</button>
@@ -631,7 +634,7 @@ function viewDone(){
     <div class="tk-foot">${GEAR[b.mod][b.type === 'experimental' ? 0 : 1]} Chegue 10 minutos antes.</div>
   </div>
   <div class="row">
-    <button class="btn" data-act="copy">Copiar mensagem pro professor</button>
+    <button class="btn" data-act="copy">Copiar mensagem pro Coach</button>
     <button class="btn btn-ink" data-act="again">Marcar outro treino</button>
   </div>
   <p class="fine">Na versão final, a confirmação e um lembrete 2h antes chegam automaticamente no WhatsApp do aluno, e o professor vê a lista da turma num painel.</p>`;
@@ -717,7 +720,7 @@ document.getElementById('agendar').addEventListener('click', e => {
   else if (a === 'again'){ Object.assign(st, { done:null, round:1, type:null, date:null, time:null, wait:false, editProfile:false, level:null }); }
   else if (a === 'copy'){
     const b = st.done;
-    const msg = `Olá, professor! ${b.status === 'espera' ? 'Entrei na lista de espera da' : 'Agendei'} ${TYPES[b.type].label.toLowerCase()} ${dayLong(b.date)}, às ${b.time} (${MODS[b.mod].label}). Código ${b.code}. ${b.name}`;
+    const msg = `Olá, Coach Rael! ${b.status === 'espera' ? 'Entrei na lista de espera da' : 'Agendei'} ${TYPES[b.type].label.toLowerCase()} ${dayLong(b.date)}, às ${b.time} (${MODS[b.mod].label}). Código ${b.code}. ${b.name}`;
     const done = () => toast('Mensagem copiada');
     if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(msg).then(done, () => toast('Não deu para copiar neste navegador'));
     else toast('Não deu para copiar neste navegador');
@@ -743,7 +746,7 @@ document.getElementById('agendar').addEventListener('submit', e => {
   } else { name = profile.name; phone = profile.phone; }
   const level = st.level || (profile && profile.level) || null;
   const remember = showForm ? $('#bk-remember').checked : true;
-  if (remember){ profile = { name, phone, level, mod:st.mod }; store.set('bushido.profile', profile); }
+  if (remember){ profile = { name, phone, level, mod:st.mod }; store.set('rael.profile', profile); }
 
   if (st.resched){ const old = bookings.find(b => b.id === st.resched); if (old) old.status = 'cancelado'; }
   const b = { id: Date.now().toString(36), code: code(), type:st.type, mod:st.mod, date:st.date, time:st.time, name, phone, level,
