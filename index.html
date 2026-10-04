@@ -1,0 +1,808 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Protótipo de site do C.T. Bushido com agendamento de aulas de Boxe, Jiu-Jitsu e Karatê-do.">
+<meta name="theme-color" content="#B81F2A">
+<title>C.T. Bushido</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Big+Shoulders+Display:wght@700;800;900&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@900&text=%E6%AD%A6%E5%A3%AB%E9%81%93%E6%8B%B3%E6%9F%94%E8%A1%93%E7%A9%BA%E6%89%8B&display=swap">
+<style>
+/* reset básico */
+html,body{margin:0}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+img{max-width:100%}
+[hidden]{display:none!important}
+/* Layout: cartaz de luta — manchete condensada à esquerda, painel de agendamento "em 3 rounds" à direita; cordas do ringue (vermelho/azul) como único ornamento */
+:root{
+  --bg:#ECEEF2; --surface:#FFFFFF; --sunk:#E2E5EB; --ink:#141A27; --muted:#596175; --line:#CBD0DA;
+  --red:#B81F2A; --on-red:#FFFFFF; --blue:#2A3B5C; --gold:#C98F0E; --ok:#1C7646; --warn:#A35A08;
+  --f-display:'Big Shoulders Display','Arial Narrow',Impact,sans-serif;
+  --f-body:'Archivo',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --f-mono:'IBM Plex Mono',ui-monospace,Consolas,monospace;
+  --f-jp:'Noto Serif JP','Yu Mincho','Hiragino Mincho ProN',serif;
+  --r:6px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0D111B; --surface:#161C2A; --sunk:#1F2637; --ink:#E8EBF2; --muted:#9BA4B7; --line:#2D3548;
+    --red:#E5484F; --on-red:#FFFFFF; --blue:#9DB0D6; --gold:#E7B63B; --ok:#4FC58C; --warn:#E6A44A;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0D111B; --surface:#161C2A; --sunk:#1F2637; --ink:#E8EBF2; --muted:#9BA4B7; --line:#2D3548;
+  --red:#E5484F; --on-red:#FFFFFF; --blue:#9DB0D6; --gold:#E7B63B; --ok:#4FC58C; --warn:#E6A44A;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;cursor:pointer}
+button:disabled{cursor:not-allowed}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.wrap{max-width:1160px;margin-inline:auto;padding-inline:20px}
+h1,h2,h3{font-family:var(--f-display);text-transform:uppercase;line-height:.95;margin:0;text-wrap:balance;letter-spacing:.01em}
+h2{font-size:clamp(2.2rem,5vw,3.2rem);font-weight:900}
+.eyebrow{font-family:var(--f-mono);font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+
+/* barra de protótipo + header */
+.proto{background:var(--ink);color:var(--bg);font-family:var(--f-mono);font-size:.72rem;letter-spacing:.06em;text-align:center;padding:6px 16px}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg)}
+.top-in{display:flex;align-items:center;gap:20px;height:64px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);font-family:var(--f-display);font-weight:900;font-size:1.6rem;text-transform:uppercase;letter-spacing:.02em}
+.brand-mark{width:26px;height:26px;border-radius:4px;background:linear-gradient(135deg,var(--red) 0 50%,var(--blue) 50% 100%)}
+.brand b{color:var(--red)}
+.nav{display:flex;gap:22px;margin-left:auto}
+.nav a{color:var(--muted);text-decoration:none;font-weight:500;font-size:.95rem}
+.nav a:hover{color:var(--ink)}
+.ropes{display:grid;gap:3px}
+.ropes i{display:block;height:3px}
+.ropes i:nth-child(1){background:var(--red)}
+.ropes i:nth-child(2){background:var(--line)}
+.ropes i:nth-child(3){background:var(--blue)}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:2px solid var(--ink);background:transparent;border-radius:var(--r);padding:12px 18px;font-weight:600;text-decoration:none;color:var(--ink);transition:transform .12s,background .12s}
+.btn:hover{transform:translateY(-1px)}
+.btn-red{background:var(--red);border-color:var(--red);color:var(--on-red)}
+.btn-ink{background:var(--ink);color:var(--bg)}
+.btn-sm{padding:8px 14px;font-size:.9rem;white-space:nowrap}
+.btn-block{width:100%}
+.link{background:none;border:0;padding:0;color:var(--blue);font-weight:600;text-decoration:underline;text-underline-offset:3px}
+
+/* hero */
+.hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,520px);gap:48px;padding-block:48px 64px;align-items:start}
+.hero-copy{display:grid;gap:22px;padding-top:12px}
+.hero h1{font-size:clamp(3rem,8vw,6.2rem);font-weight:900}
+.hero h1 em{font-style:normal;color:var(--red)}
+.lede{font-size:1.15rem;max-width:34em;margin:0;color:var(--muted)}
+.facts{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:28px}
+.facts li{display:grid;gap:2px}
+.facts b{font-family:var(--f-mono);font-size:1.6rem;font-weight:600;font-variant-numeric:tabular-nums}
+.facts span{font-size:.85rem;color:var(--muted)}
+.hero-why{display:grid;gap:10px;margin:0;padding:0;list-style:none}
+.hero-why li{display:flex;gap:10px;align-items:baseline}
+.hero-why li::before{content:"";flex:none;width:10px;height:10px;border-radius:2px;background:var(--red);transform:translateY(1px)}
+
+/* agendador */
+.booker{background:var(--surface);border:2px solid var(--ink);border-radius:10px;box-shadow:8px 8px 0 var(--ink);scroll-margin-top:90px;min-width:0}
+.bk-head{display:flex;justify-content:space-between;align-items:center;padding:16px 20px 0}
+.bk-title{font-family:var(--f-display);font-weight:900;font-size:1.5rem;text-transform:uppercase}
+.bk-count{font-family:var(--f-mono);font-size:.78rem;color:var(--muted)}
+.rounds{list-style:none;display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:14px 20px 0;padding:0}
+.rounds button{width:100%;display:flex;align-items:center;gap:8px;background:var(--sunk);border:0;border-radius:var(--r);padding:8px 10px;font-size:.88rem;font-weight:600;color:var(--muted);text-align:left}
+.rounds .rn{font-family:var(--f-mono);font-size:.72rem;padding:2px 5px;border-radius:3px;background:var(--surface);color:var(--muted)}
+.rounds button.cur{background:var(--ink);color:var(--bg)}
+.rounds button.cur .rn{background:var(--red);color:var(--on-red)}
+.rounds button.done{color:var(--ink)}
+.rounds button.done .rn{background:var(--ok);color:var(--surface)}
+.resched{margin:12px 20px 0;padding:10px 12px;border-radius:var(--r);background:var(--sunk);font-size:.88rem;display:flex;gap:10px;justify-content:space-between;align-items:center;flex-wrap:wrap}
+.bk-body{padding:18px 20px 22px;display:grid;gap:18px;min-height:380px;align-content:start}
+.lbl{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+.ctx{display:flex;justify-content:space-between;gap:10px;align-items:baseline;flex-wrap:wrap;font-weight:600}
+
+.quick{display:grid;grid-template-columns:1fr auto;gap:2px 12px;align-items:center;width:100%;text-align:left;border:2px dashed var(--red);background:transparent;border-radius:var(--r);padding:12px 14px;transition:background .12s}
+.quick:hover{background:var(--sunk)}
+.q-k{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--red);grid-column:1}
+.q-v{font-weight:600;grid-column:1}
+.q-go{grid-column:2;grid-row:1/3;font-weight:700;color:var(--red);white-space:nowrap}
+.quicks{display:grid;gap:8px}
+
+.seg{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:6px;background:var(--sunk);padding:4px;border-radius:8px}
+.seg button{border:0;background:transparent;border-radius:5px;padding:9px 10px;font-weight:600;display:grid;gap:0;text-align:center}
+.seg button small{font-weight:400;font-size:.76rem;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--surface);box-shadow:0 1px 0 var(--line),0 0 0 2px var(--ink)}
+
+.types{display:grid;gap:8px}
+.type{display:grid;grid-template-columns:1fr auto;gap:2px 12px;text-align:left;border:2px solid var(--line);background:var(--surface);border-radius:var(--r);padding:12px 14px;transition:border-color .12s,transform .12s}
+.type:hover{border-color:var(--ink);transform:translateX(2px)}
+.type b{font-size:1.02rem}
+.type span{font-size:.88rem;color:var(--muted);grid-column:1}
+.type .price{grid-column:2;grid-row:1/3;align-self:center;font-family:var(--f-mono);font-size:.85rem;color:var(--ink);font-weight:600}
+.type .price.free{color:var(--ok)}
+.type[aria-pressed="true"]{border-color:var(--ink);background:var(--sunk)}
+
+.dates{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;scroll-snap-type:x proximity;margin-inline:-4px;padding-inline:4px}
+.date{flex:none;width:64px;scroll-snap-align:start;display:grid;justify-items:center;gap:1px;padding:8px 4px;border:2px solid var(--line);background:var(--surface);border-radius:var(--r)}
+.date .dw{font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600}
+.date .dn{font-family:var(--f-display);font-weight:800;font-size:1.6rem;line-height:1}
+.date .da{font-size:.66rem;color:var(--ok);font-weight:600}
+.date .da.none{color:var(--muted);font-weight:400}
+.date[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.date[aria-pressed="true"] .dw,.date[aria-pressed="true"] .da{color:var(--bg)}
+.date:disabled{opacity:.45}
+
+.slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:8px}
+.slot{display:grid;gap:2px;padding:10px;border:2px solid var(--line);background:var(--surface);border-radius:var(--r);text-align:left;transition:border-color .12s}
+.slot:hover:not(:disabled){border-color:var(--ink)}
+.slot .t{font-family:var(--f-mono);font-weight:600;font-size:1.15rem;font-variant-numeric:tabular-nums}
+.slot .s{font-size:.76rem;color:var(--ok);font-weight:600}
+.slot.low .s{color:var(--warn)}
+.slot.full{border-style:dashed}
+.slot.full .s{color:var(--muted)}
+.slot.mine{border-color:var(--blue)}
+.slot.mine .s{color:var(--blue)}
+.slot:disabled{opacity:.45}
+.slot:disabled .s{color:var(--muted)}
+.slot[aria-pressed="true"]{border-color:var(--red);box-shadow:inset 0 0 0 1px var(--red)}
+.empty{padding:18px;border-radius:var(--r);background:var(--sunk);color:var(--muted);font-size:.92rem;margin:0}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:.78rem;color:var(--muted)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+
+.summary{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;margin:0;padding:14px;border-radius:var(--r);background:var(--sunk)}
+.summary dt{font-size:.82rem;color:var(--muted)}
+.summary dd{margin:0;font-weight:600}
+.summary .big{font-family:var(--f-mono);font-size:1.05rem}
+.edits{display:flex;gap:16px;font-size:.88rem}
+.notice{padding:10px 12px;border-left:4px solid var(--warn);background:var(--sunk);border-radius:0 var(--r) var(--r) 0;font-size:.9rem;margin:0}
+.me{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;padding:12px 14px;border:2px solid var(--line);border-radius:var(--r);font-size:.95rem}
+.fields{display:grid;gap:12px}
+.field{display:grid;gap:5px}
+.field label{font-size:.85rem;font-weight:600}
+.field input{font:inherit;color:var(--ink);background:var(--surface);border:2px solid var(--line);border-radius:var(--r);padding:11px 12px;width:100%}
+.field input:focus{border-color:var(--ink);outline:none}
+.field input[aria-invalid="true"]{border-color:var(--red)}
+.err{color:var(--red);font-size:.8rem;min-height:0;margin:0}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:2px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 12px;font-size:.85rem;font-weight:500}
+.chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.check{display:flex;gap:8px;align-items:center;font-size:.88rem;color:var(--muted)}
+.check input{width:18px;height:18px;accent-color:var(--red)}
+.fine{font-size:.8rem;color:var(--muted);margin:0}
+
+.ticket{border:2px solid var(--ink);border-radius:8px;overflow:hidden;animation:pop .35s ease-out}
+.tk-top{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:var(--ok);color:var(--surface);font-weight:700}
+.ticket.wait .tk-top{background:var(--warn)}
+.tk-code{font-family:var(--f-mono);letter-spacing:.08em}
+.tk-main{display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:center;padding:16px 14px;border-bottom:2px dashed var(--line)}
+.tk-time{font-family:var(--f-display);font-weight:900;font-size:3.4rem;line-height:.9}
+.tk-main div:last-child{display:grid;gap:2px}
+.tk-foot{padding:12px 14px;font-size:.88rem;color:var(--muted)}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.row .btn{flex:1 1 180px}
+@keyframes pop{from{transform:scale(.96);opacity:.4}to{transform:none;opacity:1}}
+
+/* seções */
+.section{padding-block:56px}
+.sec-head{display:flex;justify-content:space-between;align-items:end;gap:16px;flex-wrap:wrap;margin-bottom:24px}
+.sec-head p{margin:6px 0 0;color:var(--muted);max-width:40em}
+.band{background:var(--surface);border-block:2px solid var(--ink)}
+
+.mine{display:grid;gap:10px}
+.bk-item{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:16px;align-items:center;padding:14px 16px;background:var(--surface);border:2px solid var(--line);border-radius:8px}
+.cal{display:grid;justify-items:center;width:58px;padding:6px 0;border-radius:var(--r);background:var(--ink);color:var(--bg)}
+.cal small{font-size:.66rem;text-transform:uppercase;letter-spacing:.08em}
+.cal b{font-family:var(--f-display);font-size:1.7rem;line-height:1}
+.bk-info{display:grid;gap:2px;min-width:0}
+.bk-info strong{font-size:1.02rem}
+.bk-info span{font-size:.88rem;color:var(--muted)}
+.pill{display:inline-block;font-size:.72rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:2px 8px;border-radius:999px;border:1.5px solid currentColor;margin-left:6px;vertical-align:1px}
+.pill.ok{color:var(--ok)}
+.pill.wait{color:var(--warn)}
+.bk-act{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.mine-empty{padding:28px;border:2px dashed var(--line);border-radius:8px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;color:var(--muted)}
+
+.grade-wrap{overflow-x:auto;border:2px solid var(--ink);border-radius:8px;background:var(--surface)}
+.grade{border-collapse:collapse;width:100%;min-width:640px}
+.grade th,.grade td{padding:8px;text-align:center;border-bottom:1px solid var(--line)}
+.grade thead th{font-family:var(--f-mono);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.grade tbody th{font-family:var(--f-mono);font-weight:600;text-align:left;width:80px}
+.grade tr:last-child td,.grade tr:last-child th{border-bottom:0}
+.g-cell{width:100%;border:2px solid var(--line);border-radius:5px;background:var(--bg);padding:7px 4px;font-size:.8rem;font-weight:600;display:grid;gap:0}
+.g-cell small{font-weight:400;color:var(--muted);font-size:.7rem}
+.g-cell:hover{border-color:var(--red);color:var(--red)}
+.g-none{color:var(--line)}
+.grade-tools{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.grade-tools .seg{min-width:260px}
+
+.plans{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.plan{display:grid;gap:14px;align-content:start;padding:22px;background:var(--surface);border:2px solid var(--line);border-radius:8px}
+.plan.hot{border-color:var(--ink);box-shadow:6px 6px 0 var(--red)}
+.plan h3{font-size:1.8rem;font-weight:800}
+.plan .val{font-family:var(--f-mono);font-size:1.9rem;font-weight:600}
+.plan .val small{font-size:.85rem;color:var(--muted);font-weight:500}
+.plan ul{margin:0;padding-left:18px;color:var(--muted);display:grid;gap:4px;font-size:.93rem}
+.tag{justify-self:start;font-family:var(--f-mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;background:var(--red);color:var(--on-red);padding:3px 8px;border-radius:3px}
+
+.coach{display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);gap:40px;align-items:center}
+.coach-card{aspect-ratio:4/5;max-width:100%;border-radius:10px;background:
+  repeating-linear-gradient(0deg,transparent 0 22%,var(--line) 22% 23%),
+  linear-gradient(160deg,var(--blue),var(--ink));display:grid;place-items:end start;padding:18px;color:#fff;border:2px solid var(--ink)}
+.coach-card b{font-family:var(--f-display);font-size:2.4rem;line-height:.9;text-transform:uppercase}
+.coach p{max-width:38em;color:var(--muted);margin:0}
+.coach-body{display:grid;gap:16px}
+.record{display:flex;gap:28px;flex-wrap:wrap}
+.record div{display:grid}
+.record b{font-family:var(--f-mono);font-size:1.5rem}
+.record span{font-size:.82rem;color:var(--muted)}
+
+.faq{display:grid;gap:8px;max-width:760px}
+.faq details{background:var(--surface);border:2px solid var(--line);border-radius:8px;padding:0 16px}
+.faq summary{cursor:pointer;padding:14px 0;font-weight:600;list-style:none;display:flex;justify-content:space-between;gap:12px}
+.faq summary::after{content:"+";font-family:var(--f-mono);color:var(--red);font-weight:700}
+.faq details[open] summary::after{content:"–"}
+.faq details p{margin:0 0 14px;color:var(--muted)}
+
+footer{padding-block:28px 100px;color:var(--muted);font-size:.85rem}
+
+.mbar{position:fixed;left:0;right:0;bottom:0;z-index:30;display:none;gap:12px;align-items:center;justify-content:space-between;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));background:var(--surface);border-top:2px solid var(--ink)}
+.mbar small{display:block;font-size:.72rem;color:var(--muted)}
+.mbar b{font-size:.92rem}
+.mbar.show{display:flex}
+.toast{position:fixed;left:50%;bottom:84px;transform:translateX(-50%) translateY(20px);opacity:0;pointer-events:none;background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:var(--r);font-weight:600;font-size:.9rem;transition:.2s;z-index:40;max-width:calc(100% - 32px)}
+.toast.on{opacity:1;transform:translateX(-50%)}
+
+@media (max-width:920px){
+  .hero{grid-template-columns:minmax(0,1fr);gap:32px;padding-block:28px 48px}
+  .booker{box-shadow:5px 5px 0 var(--ink)}
+  .plans{grid-template-columns:minmax(0,1fr)}
+  .coach{grid-template-columns:minmax(0,1fr)}
+  .coach-card{aspect-ratio:16/9}
+  .nav{display:none}
+  .top-in .btn{margin-left:auto}
+}
+@media (min-width:921px){ .mbar.show{display:none} }
+@media (max-width:520px){
+  .bk-item{grid-template-columns:auto minmax(0,1fr)}
+  .bk-act{grid-column:1/-1;justify-content:flex-start}
+  .rounds button{font-size:.8rem;padding:7px 6px;gap:5px}
+  .bk-body,.bk-head{padding-inline:14px}
+  .rounds,.resched{margin-inline:14px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important}
+  html{scroll-behavior:auto}
+}
+/* C.T. Bushido */
+.brand-mark{border-radius:50%;background:var(--red)}
+.hero-tag{display:flex;gap:14px;align-items:center}
+.hero-tag .eyebrow{line-height:1.7}
+.hanko{writing-mode:vertical-rl;font-family:var(--f-jp);font-weight:900;font-size:1.35rem;line-height:1;letter-spacing:.1em;background:var(--red);color:var(--on-red);padding:9px 7px;border-radius:4px}
+.dojo{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:40px;align-items:start}
+.dojo-body{display:grid;gap:16px}
+.dojo-body p{color:var(--muted);margin:0;max-width:38em}
+.addr{display:flex;gap:14px;flex-wrap:wrap;align-items:center;font-weight:600}
+.mods{display:grid;gap:10px}
+.modcard{display:grid;grid-template-columns:64px minmax(0,1fr) auto;gap:2px 16px;align-items:center;padding:16px 18px;background:var(--surface);border:2px solid var(--line);border-radius:8px;text-align:left;transition:border-color .12s,transform .12s}
+.modcard:hover{border-color:var(--ink);transform:translateX(2px)}
+.modcard .k{grid-row:1/3;font-family:var(--f-jp);font-weight:900;font-size:1.7rem;color:var(--red);text-align:center;line-height:1}
+.modcard b{font-family:var(--f-display);font-size:1.6rem;text-transform:uppercase;line-height:1}
+.modcard span{grid-column:2;color:var(--muted);font-size:.9rem}
+.modcard .go{grid-column:3;grid-row:1/3;color:var(--red);font-weight:700;font-size:.9rem;white-space:nowrap}
+@media (max-width:920px){ .dojo{grid-template-columns:minmax(0,1fr)} }
+@media (max-width:520px){ .modcard{grid-template-columns:48px minmax(0,1fr)} .modcard .go{grid-column:2;grid-row:auto} .modcard .k{font-size:1.3rem} }
+</style>
+
+</head>
+<body>
+<div class="proto">PROTÓTIPO DE PROPOSTA PARA O C.T. BUSHIDO · horários e preços ilustrativos</div>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="brand" href="#inicio"><span class="brand-mark" aria-hidden="true"></span>C.T.<b>Bushido</b></a>
+    <nav class="nav" aria-label="Seções">
+      <a href="#meus">Meus treinos</a><a href="#horarios">Horários</a><a href="#planos">Planos</a><a href="#ct">O C.T.</a><a href="#duvidas">Dúvidas</a>
+    </nav>
+    <a class="btn btn-red btn-sm" href="#agendar">Agendar treino</a>
+  </div>
+  <div class="ropes" aria-hidden="true"><i></i><i></i><i></i></div>
+</header>
+
+<main>
+  <section class="hero wrap" id="inicio">
+    <div class="hero-copy">
+      <div class="hero-tag">
+        <span class="hanko" lang="ja" aria-hidden="true">武士道</span>
+        <p class="eyebrow">O caminho do guerreiro<br>Boxe · Jiu-Jitsu · Karatê-do</p>
+      </div>
+      <h1>Seu treino marcado em <em>três passos.</em></h1>
+      <p class="lede">Escolha a modalidade, pegue um horário e confirme. A vaga fica garantida na hora, sem esperar resposta no WhatsApp.</p>
+      <ul class="hero-why">
+        <li>Vagas em tempo real por turma, com aviso de últimos lugares</li>
+        <li>Turma lotada? Entre na lista de espera com um toque</li>
+        <li>Na segunda vez, seus dados já vêm preenchidos e dá para repetir o último treino</li>
+      </ul>
+      <ul class="facts" aria-label="O C.T. em números">
+        <li><b>3</b><span>modalidades</span></li>
+        <li><b>12</b><span>alunos por turma, no máximo</span></li>
+        <li><b>1</b><span>toque para repetir o treino</span></li>
+      </ul>
+    </div>
+
+    <div class="booker" id="agendar" aria-label="Agendamento">
+      <div class="bk-head"><span class="bk-title">Agendar treino</span><span class="bk-count" id="bk-count">Passo 1 de 3</span></div>
+      <ol class="rounds" id="rounds"></ol>
+      <div class="resched" id="resched" hidden></div>
+      <div class="bk-body" id="bk-body" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <section class="section band" id="meus">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><p class="eyebrow">Neste aparelho</p><h2>Meus treinos</h2><p>Remarque ou cancele sem precisar falar com ninguém. Cancelamento grátis até 2 horas antes.</p></div>
+      </div>
+      <div class="mine" id="mine"></div>
+    </div>
+  </section>
+
+  <section class="section" id="horarios">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><p class="eyebrow">Aulas em turma</p><h2>Grade da semana</h2><p>Toque em um horário para ir direto à confirmação.</p></div>
+        <div class="grade-tools"><div class="seg" id="grade-seg"></div></div>
+      </div>
+      <div class="grade-wrap"><table class="grade" id="grade"></table></div>
+    </div>
+  </section>
+
+  <section class="section band" id="planos">
+    <div class="wrap">
+      <div class="sec-head"><div><p class="eyebrow">Valores ilustrativos</p><h2>Planos</h2><p>A primeira aula é por conta do C.T., em qualquer modalidade.</p></div></div>
+      <div class="plans">
+        <article class="plan">
+          <h3>2x por semana</h3>
+          <div class="val">R$ 180<small> /mês</small></div>
+          <ul><li>8 aulas por mês</li><li>Uma modalidade</li><li>Reposição de falta no mesmo mês</li></ul>
+          <button class="btn" data-plan="grupo">Marcar aula em turma</button>
+        </article>
+        <article class="plan hot">
+          <span class="tag">Mais escolhido</span>
+          <h3>Livre</h3>
+          <div class="val">R$ 250<small> /mês</small></div>
+          <ul><li>Aulas sem limite</li><li>Boxe, Jiu-Jitsu e Karatê-do</li><li>Prioridade na lista de espera</li></ul>
+          <button class="btn btn-red" data-plan="experimental">Começar com aula grátis</button>
+        </article>
+        <article class="plan">
+          <h3>Particular</h3>
+          <div class="val">R$ 120<small> /aula</small></div>
+          <ul><li>60 min, 1 aluno</li><li>Correção técnica e preparação para competição</li><li>Pacote de 4 por R$ 440</li></ul>
+          <button class="btn" data-plan="particular">Ver horários particulares</button>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="ct">
+    <div class="wrap dojo">
+      <div class="dojo-body">
+        <p class="eyebrow">O C.T.</p>
+        <h2>Técnica, foco, formação física e mental.</h2>
+        <p>Três artes no mesmo tatame. Iniciante aprende base e postura antes de qualquer combate. Quem compete recebe correção de detalhe a cada treino.</p>
+        <div class="addr"><span>Estrada Municipal do Aguassai, 1723</span><a class="link" href="https://www.instagram.com/c.t.bushido/" target="_blank" rel="noopener">@c.t.bushido</a></div>
+      </div>
+      <div class="mods">
+        <button class="modcard" data-modgo="boxe"><span class="k" lang="ja" aria-hidden="true">拳</span><b>Boxe</b><span>Guarda, deslocamento, combinações e condicionamento.</span><span class="go">Horários →</span></button>
+        <button class="modcard" data-modgo="jj"><span class="k" lang="ja" aria-hidden="true">柔術</span><b>Jiu-Jitsu</b><span>Quedas, passagens e finalizações, com e sem kimono.</span><span class="go">Horários →</span></button>
+        <button class="modcard" data-modgo="kara"><span class="k" lang="ja" aria-hidden="true">空手</span><b>Karatê-do</b><span>Kihon, kata e kumite, com graduação por faixa.</span><span class="go">Horários →</span></button>
+      </div>
+    </div>
+  </section>
+
+  <section class="section band" id="duvidas">
+    <div class="wrap">
+      <div class="sec-head"><div><p class="eyebrow">Antes da primeira aula</p><h2>Dúvidas</h2></div></div>
+      <div class="faq">
+        <details open><summary>Nunca treinei. Posso começar?</summary><p>Pode. Marque a aula experimental: ela acontece dentro de uma turma normal, e o professor separa os exercícios por nível.</p></details>
+        <details><summary>Preciso de equipamento?</summary><p>Na primeira aula, não. No boxe emprestamos luva e bandagem. No jiu-jitsu e no karatê dá para fazer a primeira aula de roupa de treino.</p></details>
+        <details><summary>Posso fazer mais de uma modalidade?</summary><p>Pode. No plano Livre você marca boxe, jiu-jitsu e karatê-do na mesma semana, tudo pelo mesmo agendamento.</p></details>
+        <details><summary>E se eu não puder ir?</summary><p>Cancele em "Meus treinos" até 2 horas antes. A vaga volta para a turma e quem está na lista de espera é avisado.</p></details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="wrap">C.T. Bushido · Estrada Municipal do Aguassai, 1723 · protótipo de proposta de site com agendamento. Os agendamentos ficam salvos só neste navegador.</footer>
+
+<div class="mbar" id="mbar">
+  <div><small>Próxima vaga</small><b id="mbar-next">—</b></div>
+  <a class="btn btn-red btn-sm" href="#agendar">Agendar</a>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(function(){
+const $ = s => document.querySelector(s);
+const store = {
+  get(k, d){ try{ const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; }catch(e){ return d; } },
+  set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+};
+
+const TYPES = {
+  grupo:        { label:'Aula em turma',    short:'Turma',        cap:12, price:'Plano ou avulsa', desc:'Técnica e condicionamento. Todos os níveis.' },
+  experimental: { label:'Aula experimental',short:'Experimental', cap:12, price:'Grátis',          desc:'Sua primeira aula, numa turma normal.' },
+  particular:   { label:'Aula particular',  short:'Particular',   cap:1,  price:'R$ 120',          desc:'60 min, 1 a 1, correção de detalhe.' }
+};
+const MODS = {
+  boxe: { label:'Boxe',       note:'Luva e saco' },
+  jj:   { label:'Jiu-Jitsu',  note:'Com kimono' },
+  kara: { label:'Karatê-do',  note:'Kihon, kata, kumite' }
+};
+const GROUP_TIMES = {
+  boxe: { wk:['07:00','12:00','18:30','20:00'], sat:['10:00'] },
+  jj:   { wk:['06:30','19:00','20:30'],         sat:['09:00'] },
+  kara: { wk:['17:30','19:30'],                 sat:['11:00'] }
+};
+const PRIV_TIMES = {
+  boxe: { wk:['08:00','09:00','10:00','14:00','15:00','16:00'], sat:['08:00','09:00'] },
+  jj:   { wk:['09:00','11:00','15:00','17:00'], sat:[] },
+  kara: { wk:['14:00','16:00'], sat:['09:00'] }
+};
+const GEAR = {
+  boxe: ['Venha de roupa de treino. Luva e bandagem a gente empresta.', 'Leve luva, bandagem e água.'],
+  jj:   ['Venha de roupa de treino. Na primeira aula não precisa de kimono.', 'Leve kimono limpo e água.'],
+  kara: ['Venha de roupa de treino. Na primeira aula não precisa de karategi.', 'Leve karategi, faixa e água.']
+};
+const LEVELS = ['Nunca treinei','Iniciante','Intermediário','Avançado'];
+
+const DOW = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+const DOW_LONG = ['domingo','segunda','terça','quarta','quinta','sexta','sábado'];
+const MON = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+const pad = n => String(n).padStart(2,'0');
+const keyOf = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const fromKey = k => { const [y,m,d] = k.split('-').map(Number); return new Date(y, m-1, d); };
+const today = () => { const d = new Date(); d.setHours(0,0,0,0); return d; };
+const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate()+n); return x; };
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function startOf(k, t){ const d = fromKey(k); const [h,m] = t.split(':').map(Number); d.setHours(h,m,0,0); return d; }
+function dayShort(k){
+  const d = fromKey(k), diff = Math.round((d - today())/864e5);
+  if (diff === 0) return 'Hoje';
+  if (diff === 1) return 'Amanhã';
+  return `${DOW[d.getDay()]}, ${d.getDate()} ${MON[d.getMonth()]}`;
+}
+function dayLong(k){ const d = fromKey(k); return `${DOW_LONG[d.getDay()]}, ${d.getDate()} ${MON[d.getMonth()]}`; }
+function hash(s){ let h = 2166136261; for (const c of s){ h ^= c.charCodeAt(0); h = Math.imul(h, 16777619); } return h >>> 0; }
+
+let bookings = store.get('bushido.bookings', []);
+let profile  = store.get('bushido.profile', null);
+const st = { round:1, type:null, mod:(profile && MODS[profile.mod] && profile.mod) || 'boxe', date:null, time:null, wait:false, done:null, resched:null, editProfile:false, level:null };
+let gradeMod = st.mod;
+const pendingCancel = new Set();
+
+function timesFor(type, mod, d){
+  const dow = d.getDay(); if (dow === 0) return [];
+  const src = type === 'particular' ? PRIV_TIMES : GROUP_TIMES;
+  return dow === 6 ? src[mod].sat : src[mod].wk;
+}
+function active(b){ return b.status !== 'cancelado'; }
+function slotsFor(type, mod, k){
+  const now = new Date();
+  const kind = type === 'particular' ? 'p' : 'g';
+  return timesFor(type, mod, fromKey(k)).map(t => {
+    const past = startOf(k, t) - now < 60*60*1000; // reserva com 1h de antecedência
+    let left = kind === 'p' ? (hash(k+t+mod+'p') % 3 === 0 ? 0 : 1) : Math.max(0, 12 - (hash(k+t+mod) % 15));
+    const mineHere = bookings.filter(b => active(b) && b.date === k && b.time === t && b.mod === mod && (b.type === 'particular') === (kind === 'p'));
+    left = Math.max(0, left - mineHere.filter(b => b.status === 'confirmado').length);
+    return { time:t, left, past, mine: mineHere.length > 0 };
+  });
+}
+function freeCount(type, mod, k){ return slotsFor(type, mod, k).filter(s => !s.past && s.left > 0 && !s.mine).length; }
+function nextFree(type, mod){
+  for (let i = 0; i < 21; i++){
+    const k = keyOf(addDays(today(), i));
+    const s = slotsFor(type, mod, k).find(s => !s.past && s.left > 0 && !s.mine);
+    if (s) return { date:k, time:s.time, left:s.left };
+  }
+  return null;
+}
+function lastBooking(){
+  return bookings.filter(b => b.status === 'confirmado').sort((a,b) => b.createdAt - a.createdAt)[0] || null;
+}
+function nextSameWeekday(b){
+  const dow = fromKey(b.date).getDay();
+  for (let i = 0; i < 21; i++){
+    const d = addDays(today(), i); if (d.getDay() !== dow) continue;
+    const k = keyOf(d);
+    const s = slotsFor(b.type === 'experimental' ? 'grupo' : b.type, b.mod, k).find(s => s.time === b.time);
+    if (s && !s.past && !s.mine && s.left > 0) return { date:k, left:s.left };
+  }
+  return null;
+}
+function vagasTxt(left, type){
+  if (type === 'particular') return left ? 'Livre' : 'Ocupado';
+  if (left === 0) return 'Lotado · espera';
+  if (left <= 3) return left === 1 ? 'Última vaga' : `Últimas ${left}`;
+  return `${left} vagas`;
+}
+function code(){ const a = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; let s = 'CB-'; for (let i = 0; i < 4; i++) s += a[Math.floor(Math.random()*a.length)]; return s; }
+function fmtPhone(v){
+  const d = v.replace(/\D/g,'').slice(0,11);
+  if (d.length <= 2) return d.length ? `(${d}` : '';
+  if (d.length <= 6) return `(${d.slice(0,2)}) ${d.slice(2)}`;
+  if (d.length <= 10) return `(${d.slice(0,2)}) ${d.slice(2,6)}-${d.slice(6)}`;
+  return `(${d.slice(0,2)}) ${d.slice(2,7)}-${d.slice(7)}`;
+}
+function save(){ store.set('bushido.bookings', bookings); }
+
+/* ---------- views ---------- */
+function quickBtn(title, line, d){
+  return `<button class="quick" data-act="quick" data-type="${d.type}" data-mod="${d.mod}" data-date="${d.date}" data-time="${d.time}">
+    <span class="q-k">${title}</span><span class="q-v">${line}</span><span class="q-go">Reservar →</span></button>`;
+}
+function viewR1(){
+  const quicks = [];
+  const last = lastBooking();
+  if (last){
+    const r = nextSameWeekday(last);
+    if (r) quicks.push(quickBtn('Repetir último treino', `${TYPES[last.type === 'experimental' ? 'grupo' : last.type].short} · ${dayShort(r.date)} ${last.time} · ${MODS[last.mod].label}`,
+      { type: last.type === 'experimental' ? 'grupo' : last.type, mod:last.mod, date:r.date, time:last.time }));
+  }
+  const firstTime = !last;
+  const qt = firstTime ? 'experimental' : 'grupo';
+  const nf = nextFree(qt, st.mod);
+  if (nf) quicks.push(quickBtn(firstTime ? 'Primeira aula, grátis' : 'Próxima turma com vaga',
+    `${dayShort(nf.date)} ${nf.time} · ${MODS[st.mod].label} · ${vagasTxt(nf.left, 'grupo').toLowerCase()}`, { type:qt, mod:st.mod, ...nf }));
+
+  return `
+  <div><p class="lbl">Modalidade</p>
+    <div class="seg" role="group" aria-label="Modalidade">${Object.entries(MODS).map(([k,l]) =>
+      `<button data-act="mod" data-v="${k}" aria-pressed="${st.mod === k}">${l.label}<small>${l.note}</small></button>`).join('')}</div>
+  </div>
+  ${quicks.length ? `<div><p class="lbl">Atalho</p><div class="quicks">${quicks.join('')}</div></div>` : ''}
+  <div><p class="lbl">${quicks.length ? 'Ou escolha o treino' : 'Tipo de treino'}</p>
+    <div class="types">${Object.entries(TYPES).map(([k,t]) =>
+      `<button class="type" data-act="type" data-v="${k}" aria-pressed="${st.type === k}"><b>${t.label}</b><span>${t.desc}</span><span class="price ${k === 'experimental' ? 'free' : ''}">${t.price}</span></button>`).join('')}</div>
+  </div>`;
+}
+function ensureDate(){
+  if (st.date && freeCount(st.type, st.mod, st.date) + slotsFor(st.type, st.mod, st.date).length > 0) return;
+  const nf = nextFree(st.type, st.mod);
+  st.date = nf ? nf.date : keyOf(today());
+}
+function viewR2(){
+  ensureDate();
+  const days = Array.from({length:14}, (_, i) => keyOf(addDays(today(), i)));
+  const strip = days.map(k => {
+    const d = fromKey(k), closed = d.getDay() === 0, n = closed ? 0 : freeCount(st.type, st.mod, k);
+    return `<button class="date" data-act="date" data-v="${k}" aria-pressed="${st.date === k}" ${closed ? 'disabled' : ''} aria-label="${dayLong(k)}, ${n} horários livres">
+      <span class="dw">${i18nDow(k)}</span><span class="dn">${d.getDate()}</span><span class="da ${n ? '' : 'none'}">${closed ? 'fechado' : n ? `${n} livre${n > 1 ? 's' : ''}` : 'cheio'}</span></button>`;
+  }).join('');
+  const slots = slotsFor(st.type, st.mod, st.date);
+  const grid = slots.length ? `<div class="slots">${slots.map(s => {
+      const cls = s.mine ? 'mine' : s.left === 0 ? 'full' : (s.left <= 3 && st.type !== 'particular') ? 'low' : '';
+      const txt = s.mine ? 'Você já marcou' : s.past ? 'Encerrado' : (st.type === 'particular' && s.left === 0) ? 'Ocupado' : vagasTxt(s.left, st.type);
+      const dis = s.past || s.mine || (st.type === 'particular' && s.left === 0);
+      return `<button class="slot ${cls}" data-act="slot" data-v="${s.time}" data-left="${s.left}" ${dis ? 'disabled' : ''} aria-pressed="${st.time === s.time}"><span class="t">${s.time}</span><span class="s">${txt}</span></button>`;
+    }).join('')}</div>`
+    : `<p class="empty">Sem ${st.type === 'particular' ? 'horários particulares' : 'turmas'} de ${MODS[st.mod].label} neste dia. Escolha outro dia acima.</p>`;
+  return `
+  <div class="ctx"><span>${TYPES[st.type].label} · ${MODS[st.mod].label}</span><button class="link" data-act="goto" data-v="1">Alterar</button></div>
+  <div><p class="lbl">Dia</p><div class="dates" id="dates">${strip}</div></div>
+  <div><p class="lbl">Horário · ${dayLong(st.date)}</p>${grid}</div>
+  <div class="legend"><span><i style="background:var(--ok)"></i>com vaga</span><span><i style="background:var(--warn)"></i>últimas vagas</span><span><i style="border:2px dashed var(--muted)"></i>lotado, entra na espera</span></div>`;
+}
+function i18nDow(k){ const diff = Math.round((fromKey(k) - today())/864e5); return diff === 0 ? 'Hoje' : DOW[fromKey(k).getDay()]; }
+function viewR3(){
+  const t = TYPES[st.type];
+  const showForm = !profile || st.editProfile;
+  const needLevel = st.type === 'experimental' || !profile || !profile.level;
+  const p = profile || {};
+  return `
+  <dl class="summary">
+    <dt>Treino</dt><dd>${t.label}</dd>
+    <dt>Modalidade</dt><dd>${MODS[st.mod].label}</dd>
+    <dt>Quando</dt><dd class="big">${dayShort(st.date)} · ${st.time}</dd>
+    <dt>Valor</dt><dd>${t.price}</dd>
+  </dl>
+  <div class="edits"><button class="link" data-act="goto" data-v="2">Trocar horário</button><button class="link" data-act="goto" data-v="1">Trocar treino</button></div>
+  ${st.wait ? `<p class="notice">Essa turma está lotada. Você entra na lista de espera e recebe aviso no WhatsApp se abrir vaga.</p>` : ''}
+  <form id="bk-form" class="fields" novalidate>
+    ${showForm ? `
+      <div class="field"><label for="bk-name">Nome</label><input id="bk-name" name="name" autocomplete="name" value="${esc(p.name || '')}" placeholder="Como o professor te chama"><p class="err" id="err-name"></p></div>
+      <div class="field"><label for="bk-phone">WhatsApp</label><input id="bk-phone" name="phone" inputmode="tel" autocomplete="tel" value="${esc(p.phone || '')}" placeholder="(11) 90000-0000"><p class="err" id="err-phone"></p></div>`
+    : `<div class="me"><span>Confirmando como <b>${esc(p.name)}</b> · <span class="mono">${esc(p.phone)}</span></span><button type="button" class="link" data-act="edit-profile">Não é você?</button></div>`}
+    ${needLevel ? `<div><p class="lbl">Experiência em ${MODS[st.mod].label}</p><div class="chips" role="group" aria-label="Experiência">${LEVELS.map(l =>
+      `<button type="button" class="chip" data-act="level" data-v="${l}" aria-pressed="${(st.level || p.level) === l}">${l}</button>`).join('')}</div></div>` : ''}
+    ${showForm ? `<label class="check"><input type="checkbox" id="bk-remember" checked> Lembrar meus dados neste aparelho</label>` : ''}
+    <button class="btn ${st.wait ? 'btn-ink' : 'btn-red'} btn-block" type="submit">${st.resched ? 'Confirmar remarcação' : st.wait ? 'Entrar na lista de espera' : 'Confirmar treino'}</button>
+    <p class="fine">Cancelamento grátis até 2 horas antes, direto em "Meus treinos".</p>
+  </form>`;
+}
+function viewDone(){
+  const b = st.done, t = TYPES[b.type], wait = b.status === 'espera';
+  return `
+  <div class="ticket ${wait ? 'wait' : ''}">
+    <div class="tk-top"><span>${wait ? 'Na lista de espera' : 'Treino confirmado'}</span><span class="tk-code">${b.code}</span></div>
+    <div class="tk-main"><div class="tk-time mono">${b.time}</div><div><b>${dayShort(b.date)}${dayShort(b.date).includes(',') ? '' : ', ' + fromKey(b.date).getDate() + ' ' + MON[fromKey(b.date).getMonth()]}</b><span>${t.label}</span><span>${MODS[b.mod].label}</span></div></div>
+    <div class="tk-foot">${GEAR[b.mod][b.type === 'experimental' ? 0 : 1]} Chegue 10 minutos antes.</div>
+  </div>
+  <div class="row">
+    <button class="btn" data-act="copy">Copiar mensagem pro professor</button>
+    <button class="btn btn-ink" data-act="again">Marcar outro treino</button>
+  </div>
+  <p class="fine">Na versão final, a confirmação e um lembrete 2h antes chegam automaticamente no WhatsApp do aluno, e o professor vê a lista da turma num painel.</p>`;
+}
+
+function renderRounds(){
+  const items = [['Treino',1],['Horário',2],['Confirmar',3]];
+  $('#rounds').innerHTML = items.map(([l, n]) => {
+    const reach = !st.done && (n === 1 || (n === 2 && st.type) || (n === 3 && st.time));
+    const cls = st.done || n < st.round ? 'done' : n === st.round ? 'cur' : '';
+    return `<li><button data-act="goto" data-v="${n}" class="${cls}" ${reach ? '' : 'disabled'} ${n === st.round && !st.done ? 'aria-current="step"' : ''}><span class="rn">${n}</span>${l}</button></li>`;
+  }).join('');
+  $('#bk-count').textContent = st.done ? 'Pronto' : `Passo ${st.round} de 3`;
+  const r = st.resched && bookings.find(b => b.id === st.resched);
+  const rs = $('#resched');
+  rs.hidden = !r || !!st.done;
+  if (r) rs.innerHTML = `<span>Remarcando: <b>${TYPES[r.type].short} · ${dayShort(r.date)} ${r.time}</b></span><button class="link" data-act="stop-resched">Desistir</button>`;
+}
+function render(){
+  renderRounds();
+  $('#bk-body').innerHTML = st.done ? viewDone() : [null, viewR1, viewR2, viewR3][st.round]();
+  if (st.round === 2 && !st.done){
+    const sel = document.querySelector('#dates [aria-pressed="true"]');
+    if (sel) sel.scrollIntoView({ block:'nearest', inline:'nearest' });
+  }
+  renderMbar();
+}
+function renderMine(){
+  const now = new Date();
+  const up = bookings.filter(b => active(b) && startOf(b.date, b.time) > now)
+    .sort((a, b) => startOf(a.date, a.time) - startOf(b.date, b.time));
+  const el = $('#mine');
+  if (!up.length){
+    el.innerHTML = `<div class="mine-empty"><span>Nenhum treino marcado ainda. Quando você agendar, ele aparece aqui com opção de remarcar e cancelar.</span><a class="btn btn-sm" href="#agendar">Agendar o primeiro</a></div>`;
+    return;
+  }
+  el.innerHTML = up.map(b => {
+    const d = fromKey(b.date), t = TYPES[b.type], asking = pendingCancel.has(b.id);
+    const late = startOf(b.date, b.time) - now < 2*60*60*1000;
+    return `<div class="bk-item">
+      <div class="cal"><small>${DOW[d.getDay()]}</small><b>${d.getDate()}</b><small>${MON[d.getMonth()]}</small></div>
+      <div class="bk-info"><strong><span class="mono">${b.time}</span> · ${t.label}<span class="pill ${b.status === 'espera' ? 'wait' : 'ok'}">${b.status === 'espera' ? 'Espera' : 'Confirmado'}</span></strong>
+        <span>${MODS[b.mod].label} · código <span class="mono">${b.code}</span>${asking && late ? ' · menos de 2h: conta como falta' : ''}</span></div>
+      <div class="bk-act">${asking
+        ? `<button class="btn btn-sm btn-red" data-m="cancel-yes" data-id="${b.id}">Sim, cancelar</button><button class="btn btn-sm" data-m="cancel-no" data-id="${b.id}">Manter</button>`
+        : `<button class="btn btn-sm" data-m="resched" data-id="${b.id}">Remarcar</button><button class="btn btn-sm" data-m="cancel" data-id="${b.id}">Cancelar</button>`}</div>
+    </div>`;
+  }).join('');
+}
+function renderGrade(){
+  $('#grade-seg').innerHTML = Object.entries(MODS).map(([k, l]) => `<button data-g="${k}" aria-pressed="${gradeMod === k}">${l.label}</button>`).join('');
+  const t = GROUP_TIMES[gradeMod];
+  const times = [...new Set([...t.wk, ...t.sat])].sort();
+  const days = [1,2,3,4,5,6];
+  $('#grade').innerHTML = `<thead><tr><th>Hora</th>${days.map(d => `<th>${DOW[d]}</th>`).join('')}</tr></thead><tbody>${times.map(tm =>
+    `<tr><th scope="row">${tm}</th>${days.map(d => {
+      const has = (d === 6 ? t.sat : t.wk).includes(tm);
+      const label = tm < '12:00' ? 'Manhã' : tm < '14:00' ? 'Almoço' : tm < '18:00' ? 'Tarde' : (gradeMod === 'boxe' && d === 5 && tm === '20:00') ? 'Sparring' : 'Noite';
+      return `<td>${has ? `<button class="g-cell" data-gd="${d}" data-gt="${tm}">Turma<small>${label}</small></button>` : '<span class="g-none" aria-label="sem aula">·</span>'}</td>`;
+    }).join('')}</tr>`).join('')}</tbody>`;
+}
+function renderMbar(){
+  const nf = nextFree('grupo', st.mod);
+  $('#mbar-next').textContent = nf ? `${dayShort(nf.date)} ${nf.time} · ${MODS[st.mod].label}` : 'Ver horários';
+}
+let toastT;
+function toast(msg){ const t = $('#toast'); t.textContent = msg; t.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('on'), 2600); }
+function goBooker(){ document.getElementById('agendar').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block:'start' }); }
+
+/* ---------- interação ---------- */
+document.getElementById('agendar').addEventListener('click', e => {
+  const el = e.target.closest('[data-act]'); if (!el) return;
+  const a = el.dataset.act, v = el.dataset.v;
+  if (a === 'mod'){ st.mod = v; st.date = null; st.time = null; }
+  else if (a === 'type'){ st.type = v; st.time = null; st.wait = false; st.round = 2; }
+  else if (a === 'quick'){ Object.assign(st, { type:el.dataset.type, mod:el.dataset.mod, date:el.dataset.date, time:el.dataset.time, wait:false, round:3 }); }
+  else if (a === 'date'){ st.date = v; st.time = null; }
+  else if (a === 'slot'){ st.time = v; st.wait = el.dataset.left === '0'; st.round = 3; }
+  else if (a === 'goto'){ st.round = +v; }
+  else if (a === 'edit-profile'){ st.editProfile = true; }
+  else if (a === 'level'){ st.level = v; el.parentElement.querySelectorAll('.chip').forEach(c => c.setAttribute('aria-pressed', c === el)); return; }
+  else if (a === 'stop-resched'){ st.resched = null; }
+  else if (a === 'again'){ Object.assign(st, { done:null, round:1, type:null, date:null, time:null, wait:false, editProfile:false, level:null }); }
+  else if (a === 'copy'){
+    const b = st.done;
+    const msg = `Olá, professor! ${b.status === 'espera' ? 'Entrei na lista de espera da' : 'Agendei'} ${TYPES[b.type].label.toLowerCase()} ${dayLong(b.date)}, às ${b.time} (${MODS[b.mod].label}). Código ${b.code}. ${b.name}`;
+    const done = () => toast('Mensagem copiada');
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(msg).then(done, () => toast('Não deu para copiar neste navegador'));
+    else toast('Não deu para copiar neste navegador');
+    return;
+  }
+  render();
+});
+document.getElementById('agendar').addEventListener('input', e => {
+  if (e.target.id === 'bk-phone'){ e.target.value = fmtPhone(e.target.value); }
+  if (e.target.matches('input')){ e.target.removeAttribute('aria-invalid'); const er = document.getElementById('err-' + e.target.name); if (er) er.textContent = ''; }
+});
+document.getElementById('agendar').addEventListener('submit', e => {
+  e.preventDefault();
+  let name, phone, ok = true;
+  const showForm = !profile || st.editProfile;
+  if (showForm){
+    const n = $('#bk-name'), p = $('#bk-phone');
+    name = n.value.trim(); phone = p.value.trim();
+    if (name.length < 2){ ok = false; n.setAttribute('aria-invalid','true'); $('#err-name').textContent = 'Escreva seu nome para o professor saber quem vem.'; }
+    const digits = phone.replace(/\D/g,'');
+    if (digits.length < 10){ ok = false; p.setAttribute('aria-invalid','true'); $('#err-phone').textContent = 'Use DDD + número, por exemplo (11) 91234-5678.'; }
+    if (!ok){ (n.getAttribute('aria-invalid') ? n : p).focus(); return; }
+  } else { name = profile.name; phone = profile.phone; }
+  const level = st.level || (profile && profile.level) || null;
+  const remember = showForm ? $('#bk-remember').checked : true;
+  if (remember){ profile = { name, phone, level, mod:st.mod }; store.set('bushido.profile', profile); }
+
+  if (st.resched){ const old = bookings.find(b => b.id === st.resched); if (old) old.status = 'cancelado'; }
+  const b = { id: Date.now().toString(36), code: code(), type:st.type, mod:st.mod, date:st.date, time:st.time, name, phone, level,
+              status: st.wait ? 'espera' : 'confirmado', createdAt: Date.now() };
+  bookings.push(b); save();
+  const wasResched = !!st.resched;
+  Object.assign(st, { done:b, resched:null, editProfile:false });
+  render(); renderMine();
+  toast(wasResched ? 'Treino remarcado' : b.status === 'espera' ? 'Você está na lista de espera' : 'Treino confirmado');
+});
+
+$('#mine').addEventListener('click', e => {
+  const el = e.target.closest('[data-m]'); if (!el) return;
+  const id = el.dataset.id, b = bookings.find(x => x.id === id); if (!b) return;
+  const m = el.dataset.m;
+  if (m === 'cancel') pendingCancel.add(id);
+  else if (m === 'cancel-no') pendingCancel.delete(id);
+  else if (m === 'cancel-yes'){
+    pendingCancel.delete(id); b.status = 'cancelado'; save();
+    if (st.resched === id) st.resched = null;
+    toast('Treino cancelado. A vaga voltou para a turma.');
+    render();
+  } else if (m === 'resched'){
+    Object.assign(st, { resched:id, type: b.type === 'experimental' ? 'grupo' : b.type, mod:b.mod, date:null, time:null, wait:false, done:null, round:2 });
+    render(); goBooker();
+  }
+  renderMine();
+});
+$('#grade-seg').addEventListener('click', e => { const b = e.target.closest('[data-g]'); if (!b) return; gradeMod = b.dataset.g; renderGrade(); });
+$('#grade').addEventListener('click', e => {
+  const c = e.target.closest('.g-cell'); if (!c) return;
+  const dow = +c.dataset.gd, tm = c.dataset.gt;
+  const type = st.type === 'experimental' || !lastBooking() ? 'experimental' : 'grupo';
+  for (let i = 0; i < 14; i++){
+    const d = addDays(today(), i); if (d.getDay() !== dow) continue;
+    const k = keyOf(d), s = slotsFor(type, gradeMod, k).find(s => s.time === tm);
+    if (!s || s.past || s.mine) continue;
+    Object.assign(st, { type, mod:gradeMod, date:k, time:tm, wait: s.left === 0, round:3, done:null });
+    render(); goBooker(); return;
+  }
+  toast('Esse horário não tem vaga nas próximas duas semanas');
+});
+document.querySelectorAll('[data-plan]').forEach(b => b.addEventListener('click', () => {
+  Object.assign(st, { type:b.dataset.plan, date:null, time:null, wait:false, round:2, done:null });
+  render(); goBooker();
+}));
+document.querySelectorAll('[data-modgo]').forEach(b => b.addEventListener('click', () => {
+  Object.assign(st, { mod:b.dataset.modgo, type: lastBooking() ? 'grupo' : 'experimental', date:null, time:null, wait:false, round:2, done:null });
+  render(); goBooker();
+}));
+
+/* barra fixa no celular quando o agendador sai da tela */
+if ('IntersectionObserver' in window){
+  new IntersectionObserver(([en]) => $('#mbar').classList.toggle('show', !en.isIntersecting))
+    .observe(document.getElementById('agendar'));
+}
+
+render(); renderMine(); renderGrade();
+})();
+</script>
+</body>
+</html>
