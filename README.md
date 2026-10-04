@@ -8,8 +8,3 @@ Protótipo de proposta para o site do Coach Rael (Israel Viturino): personal e a
 - "Meus treinos" com remarcação e cancelamento
 - Grade semanal clicável e barra fixa de agendamento no celular
 
-É uma página estática (um único `index.html`, sem build). Horários, preços e vagas são ilustrativos, e os agendamentos ficam salvos só no navegador de quem testa.
-
-## Publicar no Vercel
-
-Importe o repositório no Vercel com o preset **Other** e sem comando de build. O `index.html` da raiz é servido como está.
