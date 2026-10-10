@@ -4,37 +4,27 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="Protótipo de site do Coach Rael com agendamento de personal e aulas de Boxe, Muay Thai e preparação de goleiro.">
-<meta name="theme-color" content="#B81F2A">
+<meta name="theme-color" content="#05080F">
+<link rel="icon" type="image/png" href="logo.png">
 <title>Coach Rael</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Big+Shoulders+Display:wght@700;800;900&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Archivo:wght@400;500;600;700&family=Big+Shoulders+Display:wght@700;800;900&family=IBM+Plex+Mono:wght@500;600&display=swap">
 <style>
 /* reset básico */
 html,body{margin:0}
 :root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 img{max-width:100%}
 [hidden]{display:none!important}
-/* Layout: cartaz de luta — manchete condensada à esquerda, painel de agendamento "em 3 rounds" à direita; cordas do ringue (vermelho/azul) como único ornamento */
+/* Layout: escudo do Eminente Team como identidade — fundo azul-noite, letreiro slab branco, dourado dos olhos da coruja só nas ações */
 :root{
-  --bg:#ECEEF2; --surface:#FFFFFF; --sunk:#E2E5EB; --ink:#141A27; --muted:#596175; --line:#CBD0DA;
-  --red:#B81F2A; --on-red:#FFFFFF; --blue:#2A3B5C; --gold:#C98F0E; --ok:#1C7646; --warn:#A35A08;
+  --bg:#05080F; --surface:#0C1322; --sunk:#131D31; --ink:#F2F3F5; --muted:#93A1BA; --line:#22314D;
+  --red:#E3B93C; --on-red:#0A0F1C; --blue:#7FA5D6; --navy:#1C3559; --gold:#E3B93C; --ok:#55C990; --warn:#F08A4B;
   --f-display:'Big Shoulders Display','Arial Narrow',Impact,sans-serif;
+  --f-slab:'Alfa Slab One','Rockwell','Roboto Slab',Georgia,serif;
   --f-body:'Archivo',system-ui,-apple-system,'Segoe UI',sans-serif;
   --f-mono:'IBM Plex Mono',ui-monospace,Consolas,monospace;
-  --f-jp:'Noto Serif JP','Yu Mincho','Hiragino Mincho ProN',serif;
   --r:6px;
-}
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    --bg:#0D111B; --surface:#161C2A; --sunk:#1F2637; --ink:#E8EBF2; --muted:#9BA4B7; --line:#2D3548;
-    --red:#E5484F; --on-red:#FFFFFF; --blue:#9DB0D6; --gold:#E7B63B; --ok:#4FC58C; --warn:#E6A44A;
-    color-scheme:dark;
-  }
-}
-:root[data-theme="dark"]{
-  --bg:#0D111B; --surface:#161C2A; --sunk:#1F2637; --ink:#E8EBF2; --muted:#9BA4B7; --line:#2D3548;
-  --red:#E5484F; --on-red:#FFFFFF; --blue:#9DB0D6; --gold:#E7B63B; --ok:#4FC58C; --warn:#E6A44A;
   color-scheme:dark;
 }
 *{box-sizing:border-box}
@@ -295,6 +285,36 @@ footer{padding-block:28px 100px;color:var(--muted);font-size:.85rem}
 .modcard .go{grid-column:3;grid-row:1/3;color:var(--red);font-weight:700;font-size:.9rem;white-space:nowrap}
 @media (max-width:920px){ .dojo{grid-template-columns:minmax(0,1fr)} }
 @media (max-width:520px){ .modcard{grid-template-columns:48px minmax(0,1fr)} .modcard .go{grid-column:2;grid-row:auto} }
+/* Eminente Team */
+h1,h2,.brand{font-family:var(--f-slab);font-weight:400;letter-spacing:.02em;line-height:1.05}
+h2{font-size:clamp(1.6rem,3.6vw,2.4rem)}
+.hero h1{font-size:clamp(2.1rem,5.4vw,4rem)}
+.brand{font-size:1.15rem;gap:12px}
+.brand-logo{width:44px;height:44px;border-radius:50%;display:block;flex:none}
+.top{background:var(--bg)}
+.proto{background:var(--navy);color:var(--ink)}
+.ropes i:nth-child(1){background:var(--navy)}
+.ropes i:nth-child(2){background:var(--line)}
+.ropes i:nth-child(3){background:var(--navy)}
+.hero-id{display:flex;align-items:center;gap:18px}
+.hero-logo{width:112px;height:112px;border-radius:50%;flex:none;box-shadow:0 0 0 2px var(--navy),0 0 48px rgba(127,165,214,.22)}
+.hero-id .eyebrow{line-height:1.7}
+.hero-why li::before{width:14px;height:14px;border-radius:0;background:var(--ink);transform:translateY(2px);clip-path:polygon(50% 0,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)}
+.booker{border-color:var(--navy);box-shadow:8px 8px 0 var(--navy)}
+.band{border-block-color:var(--line)}
+.btn{border-color:var(--line)}
+.btn:hover{border-color:var(--ink)}
+.btn-red,.btn-red:hover{border-color:var(--red)}
+.btn-ink,.btn-ink:hover{border-color:var(--ink)}
+.grade-wrap,.ticket{border-color:var(--navy)}
+.plan.hot{border-color:var(--red);box-shadow:6px 6px 0 var(--navy)}
+.cal{background:var(--navy);color:var(--ink)}
+.seg button[aria-pressed="true"]{background:var(--navy);box-shadow:0 0 0 2px var(--blue)}
+.mbar{border-top-color:var(--navy)}
+.tk-top{color:var(--bg)}
+footer{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+@media (max-width:920px){ .booker{box-shadow:5px 5px 0 var(--navy)} }
+@media (max-width:520px){ .hero-logo{width:84px;height:84px} .brand-logo{width:38px;height:38px} .brand{font-size:1rem} }
 </style>
 
 </head>
@@ -302,7 +322,7 @@ footer{padding-block:28px 100px;color:var(--muted);font-size:.85rem}
 <div class="proto">PROTÓTIPO DE PROPOSTA PARA O COACH RAEL · horários e preços ilustrativos</div>
 <header class="top">
   <div class="wrap top-in">
-    <a class="brand" href="#inicio"><span class="brand-mark" aria-hidden="true"></span>Coach<b>Rael</b></a>
+    <a class="brand" href="#inicio"><img class="brand-logo" src="logo.png" alt="Eminente Team" width="44" height="44">Coach<b>Rael</b></a>
     <nav class="nav" aria-label="Seções">
       <a href="#meus">Meus treinos</a><a href="#horarios">Horários</a><a href="#planos">Planos</a><a href="#sobre">Sobre</a><a href="#duvidas">Dúvidas</a>
     </nav>
@@ -314,7 +334,7 @@ footer{padding-block:28px 100px;color:var(--muted);font-size:.85rem}
 <main>
   <section class="hero wrap" id="inicio">
     <div class="hero-copy">
-      <p class="eyebrow">Israel Viturino · Personal e coach de luta</p>
+      <div class="hero-id"><img class="hero-logo" src="logo.png" alt="Escudo do Eminente Team" width="112" height="112"><p class="eyebrow">Eminente Team<br>Israel Viturino · Personal e coach de luta</p></div>
       <h1>Treino com o Coach Rael em <em>três passos.</em></h1>
       <p class="lede">Escolha a modalidade, pegue um horário e confirme. A vaga fica garantida na hora, sem esperar resposta no direct ou no WhatsApp.</p>
       <ul class="hero-why">
@@ -418,7 +438,7 @@ footer{padding-block:28px 100px;color:var(--muted);font-size:.85rem}
   </section>
 </main>
 
-<footer class="wrap">Coach Rael · Israel Viturino · protótipo de proposta de site com agendamento. Os agendamentos ficam salvos só neste navegador.</footer>
+<footer class="wrap"><img class="brand-logo" src="logo.png" alt="" width="44" height="44"><span>Coach Rael · Eminente Team · protótipo de proposta de site com agendamento. Os agendamentos ficam salvos só neste navegador.</span></footer>
 
 <div class="mbar" id="mbar">
   <div><small>Próxima vaga</small><b id="mbar-next">—</b></div>
